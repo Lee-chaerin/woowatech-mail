@@ -2,7 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
-import emailRoutes from "./routes/emailRoutes.js"
+import emailRoutes from "./routes/emailRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,5 +15,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/emails", emailRoutes);
+app.use("/api/posts", postRoutes);
 
 app.listen(process.env.PORT);
