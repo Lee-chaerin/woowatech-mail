@@ -43,3 +43,24 @@ export const getPostById = async (req, res) => {
     return res.status(500).json({error: "데이터베이스 오류 발생"})
   }
 }
+
+export const updatePost = async(req, res) => {
+  const {id} = req.params;
+  const {category_id, question, answer} = req.body;
+
+  const sql = "UPDATE questions SET category_id = ?, question = ?, answer = ? WHERE id = ?";
+  const values = [category_id, question, answer, id];
+
+  try {
+    const [result] = await db.execute(sql, values);
+
+    if(result.affectedRows === 0) {
+      return res.status(404).json({message: "해당 ID의 게시글은 없습니다."})
+    }
+
+    return res.status(200).json({message: "게시글 수정 완료", ...result})
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json({error: "데이터베이스 오류 발생"})
+  }
+}
