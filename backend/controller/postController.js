@@ -64,3 +64,21 @@ export const updatePost = async(req, res) => {
     return res.status(500).json({error: "데이터베이스 오류 발생"})
   }
 }
+
+export const deletePost = async (req, res) => {
+  const sql = "DELETE FROM questions WHERE id = ?";
+  const {id} = req.params;
+
+  try {
+    const [result] = await db.execute(sql, [id]);
+
+    if(result.affectedRows === 0) {
+      return res.status(404).json({message: "해당 ID의 게시글은 없습니다."})
+    }
+
+    return res.status(204);
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json({error: "데이터베이스 오류 발생"})
+  }
+}
