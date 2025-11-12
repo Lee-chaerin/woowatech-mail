@@ -7,9 +7,9 @@ interface LayoutProps {
 
 const Layout = ({children}: LayoutProps) => {
   return (
-    <div>
+    <div className="relative h-screen">
       <Header />
-      <main>
+      <main className="absolute inset-0 z-0">
         {children}
       </main>
     </div>
