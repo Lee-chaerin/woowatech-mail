@@ -26,6 +26,20 @@ export const getAllPosts = async (req, res) => {
   }
 }
 
+export const getPostsByCategoryId = async (req, res) => {
+  const sql = "SELECT * FROM questions WHERE category_id = ?";
+  const {categoryId} = req.params;
+
+  try {
+    const [result] = await db.execute(sql, [categoryId]);
+
+    return res.status(200).json(result);
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json({error: "데이터베이스 오류 발생"})
+  }
+}
+
 export const getPostById = async (req, res) => {
   const sql = "SELECT * FROM questions WHERE id = ?";
   const {id} = req.params;
