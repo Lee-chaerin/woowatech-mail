@@ -2,7 +2,7 @@ import { db } from "../db.js";
 
 export const createUser = async (req, res) => {
   const {category_id, email, subscribed, verified} = req.body;
-  const sql = "INSERT INTO users (category_id, email, subscribed, created, verified) VALUES (?, ?, ?, NOW(), ?)";
+  const sql = "INSERT INTO users (category_id, email, created, verified) VALUES (?, ?, NOW(), ?)";
   const values = [category_id, email, subscribed, verified];
   
   try {
