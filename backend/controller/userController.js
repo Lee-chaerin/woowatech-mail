@@ -62,6 +62,24 @@ export const getAllUsers = async (req, res) => {
   }
 }
 
+export const getUserByEmail = async (req, res) => {
+  const {email} = req.body;
+  const sql = "SELECT * FROM users WHERE email = ?";
+  
+  try {
+    const [result] = await db.execute(sql, [email]);
+
+    if(result.length !== 0) {
+      return res.status(404).json({message: "존재하는 유저입니다."})
+    }
+
+    return res.status(200).json({message: "없는 유저입니다."});
+  } catch(error) {
+    console.log(error);
+    return res.status(500).json({error: "데이터베이스 오류 발생"})
+  }
+}
+
 export const getUserById = async (req, res) => {
   const sql = "SELECT * FROM users WHERE id = ?";
   const {id} = req.params;
