@@ -20,6 +20,9 @@ importers:
       node-cron:
         specifier: ^4.2.1
         version: 4.2.1
+      nodemailer:
+        specifier: ^7.0.10
+        version: 7.0.10
       openai:
         specifier: ^6.8.1
         version: 6.8.1
@@ -300,6 +303,10 @@ packages:
 
   node-cron@4.2.1:
     resolution: {integrity: sha512-lgimEHPE/QDgFlywTd8yTR61ptugX3Qer29efeyWw2rv259HtGBNn1vZVmp8lB9uo9wC0t/AT4iGqXxia+CJFg==}
+    engines: {node: '>=6.0.0'}
+
+  nodemailer@7.0.10:
+    resolution: {integrity: sha512-Us/Se1WtT0ylXgNFfyFSx4LElllVLJXQjWi2Xz17xWw7amDKO2MLtFnVp1WACy7GkVGs+oBlRopVNUzlrGSw1w==}
     engines: {node: '>=6.0.0'}
 
   nodemon@3.1.10:
@@ -747,6 +754,8 @@ snapshots:
   negotiator@1.0.0: {}
 
   node-cron@4.2.1: {}
+
+  nodemailer@7.0.10: {}
 
   nodemon@3.1.10:
     dependencies:

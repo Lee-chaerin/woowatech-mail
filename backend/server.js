@@ -4,7 +4,7 @@ import cron from "node-cron";
 
 dotenv.config();
 
-import emailRoutes from "./routes/emailRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import { generateInterviewQA } from "./controller/aiController.js";
@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.use("/api/emails", emailRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/ai", aiRoutes);
 
