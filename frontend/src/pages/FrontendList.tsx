@@ -5,10 +5,10 @@ import { useGetPagePosts } from "../services/queries/postQuery";
 import { useState } from "react";
 import { CATEGORY_ID } from "../utils/constants";
 
-const BackendList = () => {
+const FrontendList = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: pageData, isLoading } = useGetPagePosts(CATEGORY_ID.BACKEND, currentPage);
+  const { data: pageData, isLoading } = useGetPagePosts(CATEGORY_ID.FRONTEND, currentPage);
   
   if (isLoading) {
     return <Loading />
@@ -25,7 +25,7 @@ const BackendList = () => {
   return (
     <div className="relative">
       <div className="relative h-80">
-        <img src="/background_back.jpg" alt="백엔드 배경" className="absolute inset-0 w-full h-full object-cover z-0" />
+        <img src="/background_front.jpg" alt="프론트엔드 배경" className="absolute inset-0 w-full h-full object-cover z-0" />
         <div className="absolute inset-0 bg-black opacity-60 z-[1]"></div>
       </div>
       
@@ -42,4 +42,4 @@ const BackendList = () => {
 };
 
 
-export default BackendList;
+export default FrontendList;

@@ -4,6 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Home from './pages/Home'
 import Layout from './components/layout/Layout'
 import BackendList from './pages/BackendList'
+import FrontendList from './pages/FrontendList';
+import AndroidList from './pages/AndroidList';
+import CsList from './pages/CsList';
 
 
 function App() {
@@ -15,6 +18,9 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/backend' element={<BackendList />} />
+        <Route path='/frontend' element={<FrontendList />} />
+        <Route path='/android' element={<AndroidList />} />
+        <Route path='/cs' element={<CsList />} />
       </Routes>
     </Layout>
     </QueryClientProvider>

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select"
 import { useState } from "react";
 import { useCheckUserEmail, useSendVerifyCode, useCheckVerifyCode } from "../services/queries/userQuery";
-import { isValidEmail } from "../utils/email";
+import { isValidEmail } from "../utils/helpers";
 
 const Home = () => {
   const [category, setCategory] = useState("");
