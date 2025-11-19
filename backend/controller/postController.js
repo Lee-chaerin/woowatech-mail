@@ -1,16 +1,15 @@
 import { db } from "../db.js";
 
 export const createPost = async (req, res) => {
-  const {category_id, question, answer} = req.body;
   const sql = "INSERT INTO questions (category_id, question, answer, created) VALUES (?, ?, ?, NOW())";
-  const values = [category_id, question, answer];
+  const {category_id, question, answer} = req.body;
   
   try {
-    const [result] = await db.execute(sql, values);
+    const [result] = await db.execute(sql, [category_id, question, answer]);
     return res.status(201).json(result);
   } catch(error) {
-    console.log(error);
-    return res.status(500).json({error: "데이터베이스 오류 발생"})
+    console.log("게시글 생성 오류: ", error);
+    return res.status(500).json({message: "게시글 생성 중 오류가 발생했습니다."});
   }
 };
 
@@ -21,22 +20,37 @@ export const getAllPosts = async (req, res) => {
     const [result] = await db.execute(sql);
     return res.status(200).json(result);
   } catch(error) {
-    console.log(error);
-    return res.status(500).json({error: "데이터베이스 오류 발생"})
+    console.log("전체 게시글 조회 오류: ", error);
+    return res.status(500).json({message: "데이터를 조회하는 중 오류가 발생했습니다."});
   }
 }
 
-export const getPostsByCategoryId = async (req, res) => {
-  const sql = "SELECT * FROM questions WHERE category_id = ?";
-  const {categoryId} = req.params;
+export const getPagePosts = async(req,res) => {
+  const categoryId = req.params.categoryId;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10; 
+  const offset = (page - 1) * limit;
 
   try {
-    const [result] = await db.execute(sql, [categoryId]);
+    const countSql = "SELECT COUNT(*) AS total FROM questions WHERE category_id = ?"
+    const [countResult] = await db.execute(countSql, [categoryId]);
 
-    return res.status(200).json(result);
+    const dataSql = "SELECT * FROM questions WHERE category_id = ? ORDER BY id DESC LIMIT ? OFFSET ?";
+    const [dataResult] = await db.execute(dataSql, [categoryId, limit, offset]);
+
+    const totalItems = countResult[0].total;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return res.status(200).json({
+      postsData: dataResult,
+      currentPage: page,
+      limit: limit,
+      totalItems: totalItems,
+      totalPages: totalPages
+    });
   } catch(error) {
-    console.log(error);
-    return res.status(500).json({error: "데이터베이스 오류 발생"})
+    console.log("페이지네이션 조회 오류: ", error);
+    return res.status(500).json({message: "데이터를 조회하는 중 오류가 발생했습니다."})
   }
 }
 
@@ -53,8 +67,8 @@ export const getPostById = async (req, res) => {
 
     return res.status(200).json(result[0]);
   } catch(error) {
-    console.log(error);
-    return res.status(500).json({error: "데이터베이스 오류 발생"})
+    console.log("게시글 조회 오류: ", error);
+    return res.status(500).json({message: "데이터를 조회하는 중 오류가 발생했습니다."});
   }
 }
 
@@ -74,8 +88,8 @@ export const updatePost = async(req, res) => {
 
     return res.status(200).json({message: "게시글 수정 완료", ...result})
   } catch(error) {
-    console.log(error);
-    return res.status(500).json({error: "데이터베이스 오류 발생"})
+    console.log("게시글 수정 오류: ", error);
+    return res.status(500).json({message: "데이터를 수정하는 중 오류가 발생했습니다."});
   }
 }
 
@@ -90,9 +104,9 @@ export const deletePost = async (req, res) => {
       return res.status(404).json({message: "해당 ID의 게시글은 없습니다."})
     }
 
-    return res.status(204);
+    return res.status(204).end();
   } catch(error) {
-    console.log(error);
-    return res.status(500).json({error: "데이터베이스 오류 발생"})
+    console.log("게시글 삭제 오류: ", error);
+    return res.status(500).json({message: "데이터를 삭제하는 중 오류가 발생했습니다."});
   }
 }
