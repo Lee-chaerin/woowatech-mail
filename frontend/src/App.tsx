@@ -7,6 +7,7 @@ import BackendList from './pages/BackendList'
 import FrontendList from './pages/FrontendList';
 import AndroidList from './pages/AndroidList';
 import CsList from './pages/CsList';
+import Post from './pages/Post';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path='/frontend' element={<FrontendList />} />
         <Route path='/android' element={<AndroidList />} />
         <Route path='/cs' element={<CsList />} />
+        <Route path='/post/:id' element={<Post />}/>
       </Routes>
     </Layout>
     </QueryClientProvider>

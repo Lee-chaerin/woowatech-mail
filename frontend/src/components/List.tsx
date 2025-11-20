@@ -19,8 +19,11 @@ import {
 import type { ListProps } from "../types/List";
 import { formatDate } from "../utils/helpers";
 import { BLOCK, LIMIT } from "../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const List = ({data, onPageChange}: ListProps) => {
+  const navigate = useNavigate();
+
   const {
     posts,
     currentPage,
@@ -52,6 +55,10 @@ const List = ({data, onPageChange}: ListProps) => {
     }
   }
 
+  const handlePostClick = (postId: number | string) => {
+    navigate(`/post/${postId}`)
+  }
+
   return (
     <div>
       <div className="min-h-120 md:min-h-135">
@@ -66,7 +73,7 @@ const List = ({data, onPageChange}: ListProps) => {
 
           <TableBody>
             {posts.map((item, index) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id} onClick={() => handlePostClick(item.id)}>
                 <TableCell className="w-15 text-center">{getPostNumber(index)}</TableCell>
                 <TableCell className="max-w-50 md:max-w-130 overflow-hidden text-ellipsis whitespace-nowrap">{item.question}</TableCell>
                 <TableCell className="w-30 text-center">{formatDate(item.created)}</TableCell>
