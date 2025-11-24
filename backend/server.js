@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import { generateInterviewQA } from "./controller/aiController.js";
+import { sendNewsletter } from "./services/techletterService.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,8 +27,8 @@ app.use("/api/ai", aiRoutes);
 
 app.listen(port);
 
-cron.schedule("0 0 * * *", async () => {
-  console.log("매일 면접 질문 자동 생성 시작...");
+cron.schedule("00 00 * * *", async () => {
+  console.log("면접 질문 자동 생성 시작...");
   const categories = [1, 2, 3, 4];
 
   for (const category of categories) {
@@ -35,4 +36,20 @@ cron.schedule("0 0 * * *", async () => {
   }
 
   console.log("오늘의 면접 질문 생성 완료");
+}, {
+  timezone: "Asia/Seoul"
+});
+
+cron.schedule("00 07 * * *", async () => {
+    console.log("면접 레터 발송 시작...");
+    
+    try {
+        await sendNewsletter(); 
+        console.log("면접 레터 발송 작업 완료");
+
+    } catch (error) {
+        console.error("면접 레터 발송 중 오류 발생: ", error);
+    }
+}, {
+    timezone: "Asia/Seoul"
 });

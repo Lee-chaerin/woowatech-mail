@@ -121,3 +121,15 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({error: "사용자 삭제 중 오류가 발생했습니다."})
   }
 }
+
+export const getAllUserEmailsAndCategories = async () => {
+  const sql = "SELECT email, category_id FROM users"; 
+
+  try {
+    const [result] = await db.execute(sql);
+    return result; 
+  } catch(error) {
+    console.error("사용자 목록 조회 오류: ", error);
+    return res.status(500).json({message: "사용자 조회 중 오류가 발생했습니다."});
+  }
+}

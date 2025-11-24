@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { db } from "../db.js";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export const generateInterviewQA = async (categoryId) => {
   const categoryMap = {
@@ -19,7 +20,7 @@ export const generateInterviewQA = async (categoryId) => {
 
   try {
     const [rows] = await db.query(
-      "SELECT question FROM questions WHERE category_id=?", [categoryId]
+      "SELECT question FROM questions WHERE category_id=? ORDER BY created DESC LIMIT 50", [categoryId]
     );
     const existingQuestions = rows.map((row) => row.question);
 
@@ -43,27 +44,44 @@ export const generateInterviewQA = async (categoryId) => {
         ]
 
         이미 출제된 질문 (최대 50개만 참고):
-        ${JSON.stringify(existingQuestions.slice(-50))} 
+        ${JSON.stringify(existingQuestions)} 
       `;
 
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-      });
+      let response;
+      try {
+        response = await openai.responses.create({
+          model: "gpt-4o-mini",
+          input: [{role: "user", content: prompt}],
+        });
+      } catch(apiError) {
+        if(apiError.status === 429) {
+          console.log("429 발생: 10초 대기 후 재시도");
+          await new Promise(res => setTimeout(res, 10000));
+          continue;
+        }
 
-      let content = completion.choices[0].message.content.trim();
+        console.error(`${categoryName} API 호출 실패: `, apiError.message);
+        continue;
+      }
+
+      let content = response.output_text?.trim();
+      if(!content) {
+        console.error("AI 응답 비어있음: ", response);
+        continue;
+      }
+
       content = content.replace(/```json|```/g, "").trim();
       
       let result;
       try {
         result = JSON.parse(content);
       } catch (error) {
-        console.error("AI 결과 파싱 실패", content);
+        console.error(`${categoryName} JSON 파싱 실패${attempts}: `, content);
         return;
       }
 
       const item = result[0];
-      if(!existingQuestions.includes(item.question)) {
+      if(item && item.question && item.answer && !existingQuestions.includes(item.question)) {
         newQuestion = item.question;
         newAnswer = item.answer;
       } else {

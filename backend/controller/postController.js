@@ -72,41 +72,14 @@ export const getPostById = async (req, res) => {
   }
 }
 
-export const updatePost = async(req, res) => {
-  const {id} = req.params;
-  const {category_id, question, answer} = req.body;
-
-  const sql = "UPDATE questions SET category_id = ?, question = ?, answer = ? WHERE id = ?";
-  const values = [category_id, question, answer, id];
+export const getLatestPostByCategory = async (category_id) => {
+  const sql = "SELECT * FROM questions WHERE category_id = ? ORDER BY created DESC LIMIT 1"; 
 
   try {
-    const [result] = await db.execute(sql, values);
-
-    if(result.affectedRows === 0) {
-      return res.status(404).json({message: "해당 ID의 게시글은 없습니다."})
-    }
-
-    return res.status(200).json({message: "게시글 수정 완료", ...result})
-  } catch(error) {
-    console.log("게시글 수정 오류: ", error);
-    return res.status(500).json({message: "데이터를 수정하는 중 오류가 발생했습니다."});
+    const [result] = await db.execute(sql, [category_id]);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.log(`가장 최근 게시글 조회 오류(${category_id}): `, error);
+    return res.status(500).json({ message: "데이터를 조회하는 중 오류가 발생했습니다." });
   }
-}
-
-export const deletePost = async (req, res) => {
-  const sql = "DELETE FROM questions WHERE id = ?";
-  const {id} = req.params;
-
-  try {
-    const [result] = await db.execute(sql, [id]);
-
-    if(result.affectedRows === 0) {
-      return res.status(404).json({message: "해당 ID의 게시글은 없습니다."})
-    }
-
-    return res.status(204).end();
-  } catch(error) {
-    console.log("게시글 삭제 오류: ", error);
-    return res.status(500).json({message: "데이터를 삭제하는 중 오류가 발생했습니다."});
-  }
-}
+};
