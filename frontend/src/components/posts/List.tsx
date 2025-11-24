@@ -14,32 +14,26 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
 import type { ListProps } from "../../types/posts";
 import { formatDate } from "../../utils/helpers";
 import { BLOCK, CATEGORY_ID_NUMBER, LIMIT } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 
-const List = ({data, onPageChange}: ListProps) => {
-  const {
-    categoryId,
-    posts,
-    currentPage,
-    totalPages,
-    totalItems
-  } = data;
-  
+const List = ({ data, onPageChange }: ListProps) => {
+  const { categoryId, posts, currentPage, totalPages, totalItems } = data;
+
   const navigate = useNavigate();
 
   const getCategoryName = (categoryId: number) => {
     return CATEGORY_ID_NUMBER[categoryId as keyof typeof CATEGORY_ID_NUMBER];
-  }
+  };
 
   const getPostNumber = (index: number) => {
-    const startNumber = totalItems - (currentPage-1) * LIMIT;
+    const startNumber = totalItems - (currentPage - 1) * LIMIT;
     return startNumber - index;
-  }
+  };
 
   const getPageNumbers = () => {
     const currentBlock = Math.ceil(currentPage / BLOCK);
@@ -50,19 +44,19 @@ const List = ({data, onPageChange}: ListProps) => {
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
-    
+
     return pages;
-  }
+  };
 
   const handlePageClick = (page: number) => {
-    if(page >= 1 && page <= totalPages && page !== currentPage) {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
       onPageChange(page);
     }
-  }
+  };
 
   const handlePostClick = (postId: number | string) => {
-    navigate(`/${getCategoryName(categoryId)}/${postId}`)
-  }
+    navigate(`/${getCategoryName(categoryId)}/${postId}`);
+  };
 
   return (
     <div>
@@ -78,37 +72,63 @@ const List = ({data, onPageChange}: ListProps) => {
 
           <TableBody>
             {posts.map((item, index) => (
-              <TableRow key={item.id} onClick={() => handlePostClick(item.id)} className="cursor-pointer">
+              <TableRow
+                key={item.id}
+                onClick={() => handlePostClick(item.id)}
+                className="cursor-pointer"
+              >
                 <TableCell className="w-15 text-center">{getPostNumber(index)}</TableCell>
-                <TableCell className="max-w-50 md:max-w-130 overflow-hidden text-ellipsis whitespace-nowrap">{item.question}</TableCell>
+                <TableCell className="max-w-50 md:max-w-130 overflow-hidden text-ellipsis whitespace-nowrap">
+                  {item.question}
+                </TableCell>
                 <TableCell className="w-30 text-center">{formatDate(item.created)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-      
+
       <div>
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious href="#" onClick={() => handlePageClick(currentPage-1)} className={currentPage === 1 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''} />
+              <PaginationPrevious
+                href="#"
+                onClick={() => handlePageClick(currentPage - 1)}
+                className={
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                }
+              />
             </PaginationItem>
-              
+
             {getPageNumbers().map((pageNumber) => (
               <PaginationItem key={pageNumber}>
-                <PaginationLink href="#" isActive={pageNumber===currentPage} onClick={() => handlePageClick(pageNumber)} >{pageNumber}</PaginationLink>
+                <PaginationLink
+                  href="#"
+                  isActive={pageNumber === currentPage}
+                  onClick={() => handlePageClick(pageNumber)}
+                >
+                  {pageNumber}
+                </PaginationLink>
               </PaginationItem>
             ))}
 
             <PaginationItem>
-              <PaginationNext href="#" onClick={() => handlePageClick(currentPage+1)} className={currentPage === totalPages ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''} />
+              <PaginationNext
+                href="#"
+                onClick={() => handlePageClick(currentPage + 1)}
+                className={
+                  currentPage === totalPages
+                    ? "opacity-50 cursor-not-allowed pointer-events-none"
+                    : ""
+                }
+              />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default List;

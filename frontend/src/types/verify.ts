@@ -5,7 +5,7 @@ export interface VerifyItem {
 }
 
 export type CheckEmailResponse = {
-    exists: boolean;
-    message?: string;
-    user?: any;
-}
+  exists: boolean;
+  message?: string;
+  user?: any;
+};

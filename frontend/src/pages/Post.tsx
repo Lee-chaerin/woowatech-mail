@@ -7,15 +7,15 @@ import PostContent from "../components/posts/PostContent";
 import Error from "../components/Error";
 
 const Post = () => {
-  const {category, id} = useParams();
+  const { category, id } = useParams();
   const postId = id ? parseInt(id) : undefined;
 
-  const {data: postData, isLoading} = useGetPostById(postId);
+  const { data: postData, isLoading } = useGetPostById(postId);
 
   return (
     <div className="relative">
       <Banner backgroundImage={BACKGROUND_IMAGE.ETC} />
-      
+
       {isLoading ? (
         <Loading />
       ) : postData ? (
@@ -24,7 +24,7 @@ const Post = () => {
         <Error />
       )}
     </div>
-  )
-}
+  );
+};
 
 export default Post;

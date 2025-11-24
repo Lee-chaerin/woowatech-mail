@@ -9,26 +9,27 @@ export const generateInterviewQA = async (categoryId) => {
     1: "backend",
     2: "frontend",
     3: "android",
-    4: "computer science"
-  }
+    4: "computer science",
+  };
 
   const categoryName = categoryMap[categoryId];
-  if(!categoryName) {
+  if (!categoryName) {
     console.error(`유효하지 않은 categoryId: ${categoryId}`);
     return;
   }
 
   try {
     const [rows] = await db.query(
-      "SELECT question FROM questions WHERE category_id=? ORDER BY created DESC LIMIT 50", [categoryId]
+      "SELECT question FROM questions WHERE category_id=? ORDER BY created DESC LIMIT 50",
+      [categoryId],
     );
     const existingQuestions = rows.map((row) => row.question);
 
     let newQuestion = null;
     let newAnswer = null;
     let attempts = 0;
-    
-    while(!newQuestion && attempts < 3) {
+
+    while (!newQuestion && attempts < 3) {
       attempts++;
 
       const prompt = `
@@ -51,12 +52,12 @@ export const generateInterviewQA = async (categoryId) => {
       try {
         response = await openai.responses.create({
           model: "gpt-4o-mini",
-          input: [{role: "user", content: prompt}],
+          input: [{ role: "user", content: prompt }],
         });
-      } catch(apiError) {
-        if(apiError.status === 429) {
+      } catch (apiError) {
+        if (apiError.status === 429) {
           console.log("429 발생: 10초 대기 후 재시도");
-          await new Promise(res => setTimeout(res, 10000));
+          await new Promise((res) => setTimeout(res, 10000));
           continue;
         }
 
@@ -65,13 +66,13 @@ export const generateInterviewQA = async (categoryId) => {
       }
 
       let content = response.output_text?.trim();
-      if(!content) {
+      if (!content) {
         console.error("AI 응답 비어있음: ", response);
         continue;
       }
 
       content = content.replace(/```json|```/g, "").trim();
-      
+
       let result;
       try {
         result = JSON.parse(content);
@@ -81,29 +82,29 @@ export const generateInterviewQA = async (categoryId) => {
       }
 
       const item = result[0];
-      if(item && item.question && item.answer && !existingQuestions.includes(item.question)) {
+      if (item && item.question && item.answer && !existingQuestions.includes(item.question)) {
         newQuestion = item.question;
         newAnswer = item.answer;
       } else {
         console.log(`${categoryName} 질문 중복, ${attempts}번째 재시도`);
       }
     }
-    
-    if(newQuestion) {
+
+    if (newQuestion) {
       await db.query(
         "INSERT INTO questions (category_id, question, answer, created) VALUES (?, ?, ?, NOW())",
-        [categoryId, newQuestion, newAnswer]
+        [categoryId, newQuestion, newAnswer],
       );
       console.log(`${categoryName} 질문 생성 완료`);
     } else {
       console.log(`${categoryName} 질문 생성 실패: 중복 3회 발생`);
     }
-  } catch(error) {
+  } catch (error) {
     console.error(`${categoryName} 질문 생성 실패: `, error.message);
   }
 };
 
-export const generateInterviewQAHandler = async(req, res) => {
+export const generateInterviewQAHandler = async (req, res) => {
   try {
     const { category_id } = req.body;
     if (!category_id) {
@@ -115,4 +116,4 @@ export const generateInterviewQAHandler = async(req, res) => {
   } catch (err) {
     res.status(500).json({ error: "면접 질문 생성 실패", details: err.message });
   }
-}
+};

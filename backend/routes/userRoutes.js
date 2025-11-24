@@ -1,5 +1,12 @@
 import express from "express";
-import { sendVerifyCode, checkVerifyCode, getAllUsers, getUserByEmail, getUserById, deleteUser} from "../controller/userController.js";
+import {
+  sendVerifyCode,
+  checkVerifyCode,
+  getAllUsers,
+  getUserByEmail,
+  getUserById,
+  deleteUser,
+} from "../controller/userController.js";
 
 const router = express.Router();
 
