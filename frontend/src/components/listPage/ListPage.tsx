@@ -4,7 +4,7 @@ import Loading from "../Loading";
 import { useState } from "react";
 import Banner from "./Banner";
 import { useGetPagePosts } from "../../services/queries/postQuery";
-import type { ListPageProps } from "../../types/posts";
+import type { ListPageProps } from "../../types/page";
 
 
 const ListPage = ({categoryId, backgroundImage}: ListPageProps) => {
@@ -24,7 +24,6 @@ const ListPage = ({categoryId, backgroundImage}: ListPageProps) => {
           <Loading /> 
         ) : pageData && pageData.postsData ? (
           <List data={{
-            categoryId: categoryId,
             posts: pageData.postsData,
             currentPage: pageData.currentPage,
             totalPages: pageData.totalPages,

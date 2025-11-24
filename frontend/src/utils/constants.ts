@@ -5,6 +5,13 @@ export const CATEGORY_ID = {
   CS: 4
 }
 
+export const CATEGORY_ID_NUMBER = {
+  1: "backend",
+  2: "frontend",
+  3: "android",
+  4: "cs"
+}
+
 export const BACKGROUND_IMAGE = {
   BACKEND: "/bg_back.jpg",
   FRONTEND: "/bg_front.jpg",

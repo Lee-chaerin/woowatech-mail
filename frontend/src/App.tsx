@@ -22,7 +22,7 @@ function App() {
         <Route path='/frontend' element={<Frontend />} />
         <Route path='/android' element={<Android />} />
         <Route path='/cs' element={<Cs />} />
-        <Route path='/post/:id' element={<Post />}/>
+        <Route path='/:category/:id' element={<Post />}/>
       </Routes>
     </Layout>
     </QueryClientProvider>

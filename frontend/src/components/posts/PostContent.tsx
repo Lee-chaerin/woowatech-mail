@@ -4,12 +4,12 @@ import { Button } from "../ui/button";
 import { ArrowLeft } from 'lucide-react';
 import type { PostContentProps } from "../../types/posts";
 
-const PostContent = ({postData}: PostContentProps) => {
+const PostContent = ({category, postData}: PostContentProps) => {
   const navigate = useNavigate();
   const[isAnswerVisible, setIsAnswerVisible] = useState(false);
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate(`/${category}`);
   }
 
   const handleShowAnswer = () => {

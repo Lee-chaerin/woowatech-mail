@@ -1,4 +1,4 @@
-import type { BannerProps } from "../../types/page";
+import type { BannerProps } from "../../types/posts";
 
 const Banner = ({backgroundImage}: BannerProps) => {
   return (

@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useGetPostById } from "../services/queries/postQuery";
-import Loading from "../components/Loaing";
+import Loading from "../components/Loading";
 import Banner from "../components/posts/Banner";
 import { BACKGROUND_IMAGE } from "../utils/constants";
 import PostContent from "../components/posts/PostContent";
 import Error from "../components/Error";
 
 const Post = () => {
-  const {id} = useParams();
+  const {category, id} = useParams();
   const postId = id ? parseInt(id) : undefined;
 
   const {data: postData, isLoading} = useGetPostById(postId);
@@ -19,7 +19,7 @@ const Post = () => {
       {isLoading ? (
         <Loading />
       ) : postData ? (
-        <PostContent postData={postData} />
+        <PostContent postData={postData} category={category!} />
       ) : (
         <Error />
       )}

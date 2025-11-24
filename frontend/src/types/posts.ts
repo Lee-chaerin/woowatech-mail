@@ -5,6 +5,7 @@ export type PostItem = {
 }
 
 export type ListData = {
+  categoryId: number;
   posts: PostItem[];
   currentPage: number;
   totalPages: number;
@@ -26,6 +27,7 @@ export interface ListPageProps {
 }
 
 export interface PostContentProps {
+  category: string;
   postData: {
     question: string;
     answer: string;

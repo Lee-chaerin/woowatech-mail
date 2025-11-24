@@ -18,11 +18,12 @@ import {
 
 import type { ListProps } from "../../types/posts";
 import { formatDate } from "../../utils/helpers";
-import { BLOCK, LIMIT } from "../../utils/constants";
+import { BLOCK, CATEGORY_ID_NUMBER, LIMIT } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 
 const List = ({data, onPageChange}: ListProps) => {
   const {
+    categoryId,
     posts,
     currentPage,
     totalPages,
@@ -30,6 +31,10 @@ const List = ({data, onPageChange}: ListProps) => {
   } = data;
   
   const navigate = useNavigate();
+
+  const getCategoryName = (categoryId: number) => {
+    return CATEGORY_ID_NUMBER[categoryId as keyof typeof CATEGORY_ID_NUMBER];
+  }
 
   const getPostNumber = (index: number) => {
     const startNumber = totalItems - (currentPage-1) * LIMIT;
@@ -56,7 +61,7 @@ const List = ({data, onPageChange}: ListProps) => {
   }
 
   const handlePostClick = (postId: number | string) => {
-    navigate(`/post/${postId}`)
+    navigate(`/${getCategoryName(categoryId)}/${postId}`)
   }
 
   return (
