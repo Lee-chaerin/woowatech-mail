@@ -1,47 +1,28 @@
 import { useParams } from "react-router-dom";
 import { useGetPostById } from "../services/queries/postQuery";
-import { useEffect, useState } from "react";
-import { Button } from "../components/ui/button";
 import Loading from "../components/Loaing";
+import Banner from "../components/posts/Banner";
+import { BACKGROUND_IMAGE } from "../utils/constants";
+import PostContent from "../components/posts/PostContent";
+import Error from "../components/Error";
 
 const Post = () => {
   const {id} = useParams();
-
-  const[answerView, setAnswerView] = useState(false);
-
   const postId = id ? parseInt(id) : undefined;
 
   const {data: postData, isLoading} = useGetPostById(postId);
 
-  console.log(postData)
-
-  const handleShowAnswer = () => {
-    setAnswerView(prev => !prev);
-  }
-
-  if(isLoading) {
-    return <Loading />
-  }
-  
-  
   return (
     <div className="relative">
-      <div className="relative h-50 bg-[#6eebd4]">
-        
-      </div>
+      <Banner backgroundImage={BACKGROUND_IMAGE.ETC} />
       
-      <div className="max-w-5xl mx-auto pt-5 md:my-15 px-2">
-        <p className="text-2xl font-hannaAir font-semibold">Q. {postData.question}</p>
-
-        <div className="flex justify-center mt-10">
-          <Button className="bg-[#6eebd4] text-black font-hanna text-lg hover:text-white" onClick={() => handleShowAnswer()}>정답 확인</Button>
-        </div>
-
-        {answerView && (
-          <p className="text-lg mt-5">{postData.answer}</p>
-        )}
-        
-      </div>
+      {isLoading ? (
+        <Loading />
+      ) : postData ? (
+        <PostContent postData={postData} />
+      ) : (
+        <Error />
+      )}
     </div>
   )
 }

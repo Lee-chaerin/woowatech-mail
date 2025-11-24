@@ -15,3 +15,19 @@ export type ListProps = {
   data: ListData, 
   onPageChange: (page: number) => void
 }
+
+export interface BannerProps {
+  backgroundImage: string;
+}
+
+export interface ListPageProps {
+  categoryId: number;
+  backgroundImage: string;
+}
+
+export interface PostContentProps {
+  postData: {
+    question: string;
+    answer: string;
+  }
+}

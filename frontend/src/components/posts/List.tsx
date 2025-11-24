@@ -16,20 +16,20 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 
-import type { ListProps } from "../types/List";
-import { formatDate } from "../utils/helpers";
-import { BLOCK, LIMIT } from "../utils/constants";
+import type { ListProps } from "../../types/posts";
+import { formatDate } from "../../utils/helpers";
+import { BLOCK, LIMIT } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 
 const List = ({data, onPageChange}: ListProps) => {
-  const navigate = useNavigate();
-
   const {
     posts,
     currentPage,
     totalPages,
     totalItems
   } = data;
+  
+  const navigate = useNavigate();
 
   const getPostNumber = (index: number) => {
     const startNumber = totalItems - (currentPage-1) * LIMIT;
@@ -73,7 +73,7 @@ const List = ({data, onPageChange}: ListProps) => {
 
           <TableBody>
             {posts.map((item, index) => (
-              <TableRow key={item.id} onClick={() => handlePostClick(item.id)}>
+              <TableRow key={item.id} onClick={() => handlePostClick(item.id)} className="cursor-pointer">
                 <TableCell className="w-15 text-center">{getPostNumber(index)}</TableCell>
                 <TableCell className="max-w-50 md:max-w-130 overflow-hidden text-ellipsis whitespace-nowrap">{item.question}</TableCell>
                 <TableCell className="w-30 text-center">{formatDate(item.created)}</TableCell>
@@ -87,7 +87,7 @@ const List = ({data, onPageChange}: ListProps) => {
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious href="#" onClick={() => handlePageClick(currentPage-1)} className={currentPage === 1 ? 'hidden' : ''} />
+              <PaginationPrevious href="#" onClick={() => handlePageClick(currentPage-1)} className={currentPage === 1 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''} />
             </PaginationItem>
               
             {getPageNumbers().map((pageNumber) => (
@@ -97,7 +97,7 @@ const List = ({data, onPageChange}: ListProps) => {
             ))}
 
             <PaginationItem>
-              <PaginationNext href="#" onClick={() => handlePageClick(currentPage+1)} className={currentPage === totalPages ? 'hidden' : ''} />
+              <PaginationNext href="#" onClick={() => handlePageClick(currentPage+1)} className={currentPage === totalPages ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''} />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
